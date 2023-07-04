@@ -9,7 +9,7 @@ namespace Fahrtberechnung.Interfaces
     {
         ValueTask<UserViewDto> CreateAsync(UserCreationDto userCreationDTO);
 
-        ValueTask<UserViewDto> UpdateAsync(string login, string password, User user);
+        ValueTask<UserViewDto> UpdateAsync(string login, string password, UserUpdatDto user);
 
         ValueTask<bool> DeleteAsync(Expression<Func<User, bool>> expression);
 

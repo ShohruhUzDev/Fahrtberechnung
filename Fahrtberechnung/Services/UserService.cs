@@ -38,7 +38,8 @@ namespace Fahrtberechnung.Services
         }
         public async ValueTask<bool> ChangePasswordAsync(string oldPassword, [UserPassword] string newPassword)
         {
-            var user = await unitOfWork.Users.GetAsync(u => u.Id == HttpContextHelper.UserId);
+
+            var user = await unitOfWork.Users.GetAsync(u => u.Password == oldPassword.Encrypt());
 
             if (user == null)
                 throw new FahrtberechnungException(404, "User not found");
@@ -80,12 +81,12 @@ namespace Fahrtberechnung.Services
             return user.Adapt<UserViewDto>();
         }
 
-        public async ValueTask<UserViewDto> UpdateAsync(string login, string password, User userForUpdateDto)
+        public async ValueTask<UserViewDto> UpdateAsync(string login, string password, UserUpdatDto userForUpdateDto)
         {
-            var alreadyExistUser = await unitOfWork.Users.GetAsync(u => u.Username == userForUpdateDto.Username && u.Id != HttpContextHelper.UserId);
+            //var alreadyExistUser = await unitOfWork.Users.GetAsync(u => u.Username == userForUpdateDto.Username && u.Id != HttpContextHelper.UserId);
 
-            if (alreadyExistUser != null)
-                throw new FahrtberechnungException(400, "User with such username already exists");
+            //if (alreadyExistUser != null)
+            //    throw new FahrtberechnungException(400, "User with such username already exists");
 
             var existUser = await GetAsync(u => u.Username == login && u.Password == password.Encrypt());
 

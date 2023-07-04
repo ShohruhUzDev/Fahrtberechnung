@@ -1,4 +1,5 @@
 using Fahrtberechnung.DbContexts;
+using Fahrtberechnung.Extensions;
 using Fahrtberechnung.Helpers;
 using Fahrtberechnung.Interfaces;
 using Fahrtberechnung.IRepostories;
@@ -12,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //builder.Services.AddControllers().AddNewtonsoftJson(options =>
- //   options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+  //  options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +35,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole(
         Enum.GetName(UserRole.Admin)));
 });
+builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.AddSwaggerGen();// Add custom services
+builder.Services.AddSwaggerService();
 
 builder.Services.AddCors(option =>
 {
@@ -44,8 +48,9 @@ builder.Services.AddCors(option =>
             .AllowAnyHeader();
     });
 });
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
